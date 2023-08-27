@@ -1,0 +1,26 @@
+#create kuberenets manifest deployment for argo cd , for visa-service
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visa-service-deployment
+  namespace: default
+  labels:
+    app: VisaWheels
+    service: visa-service
+spec:
+replicas: 2
+selector:
+  matchLabels:
+    app: VisaWheels
+    service: visa-service
+template:
+  metadata:
+    labels:
+      app: VisaWheels
+      service: visa-service
+  spec:
+  containers:
+  - name: visa-service
+    image: talyahalomy/visa-service:latest
+    ports: 8000

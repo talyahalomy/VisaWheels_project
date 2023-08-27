@@ -1,0 +1,25 @@
+#create argo cd application for visa-service , and main-service
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: VisaWheels
+  namespace: argocd
+  
+spec:
+  project: VisaWheels
+  source:
+    repoURL: https://github.com/talyahalomy/VisaWheels_project
+    path: dev
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: VisaWheels
+
+syncPolicy:
+  syncOptions:
+    - CreateNamespace=true
+  automated:
+    selfHeal: true
+    prune: true
+
+
