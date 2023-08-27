@@ -10,6 +10,7 @@ spec:
   selector:
     matchLabels:
       app: visawheels
+      service: visa-service
   template:
     metadata:
       labels:
