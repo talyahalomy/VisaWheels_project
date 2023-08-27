@@ -1,10 +1,10 @@
-#create argo cd application for visa-service , and main-service
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: VisaWheels
   namespace: argocd
-  
+
 spec:
   project: VisaWheels
   source:

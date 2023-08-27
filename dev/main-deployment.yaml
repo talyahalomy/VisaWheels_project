@@ -1,4 +1,4 @@
-#create kuberenets manifest deployment for argo cd , for visa-service
+
 
 apiVersion: apps/v1
 kind: Deployment
@@ -24,3 +24,4 @@ template:
   - name: main-service
     image: talyahalomy/main-service:latest
     ports: 9001
+
