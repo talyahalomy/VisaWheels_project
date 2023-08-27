@@ -5,7 +5,7 @@ metadata:
   name: main-service
   namespace: visawheels
   labels:
-    app: VisaWheels
+    app: visasheels
     service: main-service
   ports:
   - protocol: TCP

@@ -5,18 +5,18 @@ metadata:
   name: visa-service-deployment
   namespace: visawheels
   labels:
-    app: VisaWheels
+    app: visasheels
     service: visa-service
 spec:
 replicas: 2
 selector:
   matchLabels:
-    app: VisaWheels
+    app: visasheels
     service: visa-service
 template:
   metadata:
     labels:
-      app: VisaWheels
+      app: visasheels
       service: visa-service
   spec:
   containers:
