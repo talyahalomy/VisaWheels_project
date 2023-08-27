@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: visa-service-deployment
-  namespace: default
+  namespace: visawheels
   labels:
     app: VisaWheels
     service: visa-service
