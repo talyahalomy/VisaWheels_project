@@ -1,24 +1,24 @@
 
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: main-service-deployment
+  name: main-deployment
   namespace: visawheels
   labels:
     app: visawheels
-spec:
-replicas: 2
-selector:
-  matchLabels:
+  spec:
+    replicas: 2
+    selector:
+    matchLabels:
     app: visawheels
 template:
   metadata:
     labels:
       app: visawheels
-  spec:
-  containers:
-  - name: main-service
-    image: talyahalomy/main-service:latest
-    ports: 9001
+    spec:
+     containers:
+     - name: main-service
+       image: talyahalomy/main-service:latest
+       ports:
+        - containerPort: 9001
 

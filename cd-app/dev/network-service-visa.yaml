@@ -2,12 +2,13 @@
 apiVersion: apps/v1
 kind: Service
 metadata:
-  name: visa-service
-  namespace: visawheels
-  labels:
-    app: visawheels
-  ports:
-  - protocol: TCP
-    port: 8000
-    targetPort: 8000
-  type: ClusterIP       
+   name: visa-service
+   namespace: visawheels
+spec:
+    selector:
+        app: visawheels
+    ports:
+      - protocol: TCP
+        port: 9001
+        targetPort: 9001
+        type: ClusterIP       
