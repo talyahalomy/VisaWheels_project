@@ -6,7 +6,6 @@ metadata:
   namespace: visawheels
   labels:
     app: visasheels
-    service: main-service
   ports:
   - protocol: TCP
     port: 9001

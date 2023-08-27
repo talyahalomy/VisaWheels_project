@@ -7,18 +7,15 @@ metadata:
   namespace: visawheels
   labels:
     app: visasheels
-    service: main-service
 spec:
 replicas: 2
 selector:
   matchLabels:
     app: visasheels
-    service: main-service
 template:
   metadata:
     labels:
       app: visasheels
-      service: main-service
   spec:
   containers:
   - name: main-service

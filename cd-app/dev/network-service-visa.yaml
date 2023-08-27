@@ -6,7 +6,6 @@ metadata:
   namespace: visawheels
   labels:
     app: visasheels
-    service: visa-service
   ports:
   - protocol: TCP
     port: 8000

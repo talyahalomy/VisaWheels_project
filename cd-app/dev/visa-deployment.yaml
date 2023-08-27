@@ -6,18 +6,15 @@ metadata:
   namespace: visawheels
   labels:
     app: visasheels
-    service: visa-service
 spec:
 replicas: 2
 selector:
   matchLabels:
     app: visasheels
-    service: visa-service
 template:
   metadata:
     labels:
       app: visasheels
-      service: visa-service
   spec:
   containers:
   - name: visa-service
