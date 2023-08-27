@@ -27,14 +27,14 @@
             - name: Build and push main
               uses: docker/build-push-action@v4
               with:
-                context: ./main-service
+                context: ./main_service
                 push: true
                 tags: ${{ secrets.DOCKER_USERNAME }}/main-service:latest
       
             - name: Build and push visa
               uses: docker/build-push-action@v4
               with:
-                context: ./visa-service
+                context: ./visa_service
                 push: true
                 tags: ${{ secrets.DOCKER_USERNAME }}/visa-service:latest
       
