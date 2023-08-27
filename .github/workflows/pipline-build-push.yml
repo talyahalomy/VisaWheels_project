@@ -1,37 +1,39 @@
 
-
-on:
-  push:
-    branches:
-      - main
-  jobs:
-   docker:
-    name: Build and push docker images
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: login to Docker hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}      
-
-    -  name: Build and push main
-       uses: docker/build-push-action@v4
-       with:
-        context: /main-service .
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/main-service:latest
+      on:
+        push:
+          branches:
+            - main
       
-    - name: Build and push visa
-      uses: docker/build-push-action@v4
-      with:
-        context: /visa-service .
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/visa-service:latest
+      name: Build and push docker images
+      
+      jobs:
+        build-and-push:
+          runs-on: ubuntu-latest
+      
+          steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+      
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v2
+      
+            - name: Login to Docker Hub
+              uses: docker/login-action@v2
+              with:
+                username: ${{ secrets.DOCKER_USERNAME }}
+                password: ${{ secrets.DOCKER_TOKEN }}
+      
+            - name: Build and push main
+              uses: docker/build-push-action@v4
+              with:
+                context: ./main-service
+                push: true
+                tags: ${{ secrets.DOCKER_USERNAME }}/main-service:latest
+      
+            - name: Build and push visa
+              uses: docker/build-push-action@v4
+              with:
+                context: ./visa-service
+                push: true
+                tags: ${{ secrets.DOCKER_USERNAME }}/visa-service:latest
+      
