@@ -136,7 +136,7 @@ async def create_customer(customer_id: str, name: str, address: str, phone: str)
 
 #Get visa URL and port from environment variables
 
-target_url = "http://lucid_williamson:8000/receive"
+target_url = "http:/####:8000/receive"
 
 
 @app.post("/order",tags = ["order"])
