@@ -15,7 +15,7 @@ selector:
 template:
   metadata:
     labels:
-      app: visasheels
+      app: visawheels
   spec:
   containers:
   - name: main-service
