@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: visawheels-projcet
+  name: visawheels
   namespace: argocd
 
 spec:
