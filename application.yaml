@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: default
+  name: visawheels-projcet
   namespace: argocd
 
 spec:
@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/talyahalomy/VisaWheels_project
     targetRevision: HEAD
-    path: dev
+    path: cd-app/dev
     
   destination:
     server: 'https://kubernetes.default.svc'
