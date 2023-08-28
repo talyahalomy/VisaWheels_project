@@ -1,7 +1,9 @@
 from fastapi import FastAPI, Response
+import requests
 import random
 import json
 import uvicorn
+import os
 
 app = FastAPI()
 
@@ -51,6 +53,7 @@ def decide_reuqest(status):
     return random.choice(status)
 
 
+main_target_url = "http://127.0.0.1:9001/ready-order"
 
 @app.post("/receive", tags=["receive"])
 async def receive_post_request(data: dict):
@@ -60,12 +63,18 @@ async def receive_post_request(data: dict):
     received_data = data 
     received_data["status"] = final_status
     if final_status == "approve":
-        approved_visa[Transaction_id] = received_data
+        approved_visa[Transaction_id] = Transaction_id
     else:
         rejected_visa[Transaction_id] = received_data
     return received_data
 
-       
+
+@app.post("/send_approved_visa", tags=["send_response"])
+async def send_approved_visa():
+    response = requests.post(url=main_target_url, json=approved_visa)
+    
+
+#send recieved_data to main_service
 
 @app.get("/get-all-transactions")
 async def get_all_transactions():

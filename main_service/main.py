@@ -2,6 +2,7 @@ from fastapi import FastAPI, Response
 import json
 import requests 
 import uvicorn
+import os
 
 
 # with open("vehicles.json", "r") as f:
@@ -134,9 +135,9 @@ async def create_customer(customer_id: str, name: str, address: str, phone: str)
         return customers[customer_id]
 
 
-#Get visa URL and port from environment variables
+#Get visa URL from environment variables (ConfigMap in Kubernetes), else use default values
 
-target_url = "http:/####:8000/receive"
+visa_target_url = "http://127.0.0.1:8000/receive"
 
 
 @app.post("/order",tags = ["order"])
@@ -146,16 +147,21 @@ async def buy_car(customer_id : str, card_number : str, vehicle_id : str, amount
         "customer_id": customer_id,  
         "card_number" : card_number,
         "vehicle_id" : vehicle_id,
-        "amount" : amount   } }
+        "amount" : amount   } } 
 
-     
+    response = requests.post(url=visa_target_url,json=data_to_send)
 
-    response = requests.post(url=target_url,json=data_to_send)
 
+@app.post("/ready-order",tags = ["order"])
+async def receive_order_transaction(data:dict):
+        received_data = data
+        print("Received data:", received_data)
+        return received_data
+        
 
 
 if __name__ == "__main__":
- uvicorn.run(app, host="0.0.0.0", port=9001)
+   uvicorn.run(app, host="0.0.0.0", port=9001)
 
  
 

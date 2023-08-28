@@ -18,9 +18,10 @@ spec:
         service: main-service
     spec:
       containers:
-      - name: visa-service
-        image: talyahalomy/visa-service:latest
-        ports:
-        - containerPort: 8000
+       - name: visa-service
+         image: talyahalomy/visa-service:latest
+
+    ports:
+    - containerPort: 8000
 
 

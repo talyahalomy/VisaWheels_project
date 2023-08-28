@@ -10,14 +10,21 @@ spec:
   selector:
     matchLabels:
       app: visawheels
+      service: main-service
   template:
     metadata:
       labels:
         app: visawheels
     spec:
       containers:
-      - name: main-service
-        image: talyahalomy/main-service:latest
-        ports:
-        - containerPort: 9001
+       - name: main-service
+         image: talyahalomy/main-service:latest
+         env:
+           - name: TARGET_URL
+             valueFrom:
+                configMapKeyRef:
+                name: main-config-map
+                key: TARGET_URL
+    ports:
+    - containerPort: 9001
 
