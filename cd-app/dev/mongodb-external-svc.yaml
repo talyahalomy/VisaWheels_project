@@ -4,6 +4,6 @@ metadata:
   name: mongodb
 subsets:
   - addresses: 
-      - ip: 10.48.4.29
+      - ip: 10.64.3.36
     ports:
       - port: 27017
