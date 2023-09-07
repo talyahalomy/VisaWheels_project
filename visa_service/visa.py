@@ -63,7 +63,7 @@ async def receive_post_request(data: dict):
     received_data = data 
     received_data["status"] = final_status
     if final_status == "approve":
-        approved_visa[Transaction_id] = Transaction_id
+        approved_visa[Transaction_id] = received_data
     else:
         rejected_visa[Transaction_id] = received_data
     return received_data
@@ -71,8 +71,9 @@ async def receive_post_request(data: dict):
 
 @app.post("/send_approved_visa", tags=["send_response"])
 async def send_approved_visa():
-    response = requests.post(url=main_target_url, json=approved_visa)
-    
+    data = approved_visa
+    response = requests.post(url=main_target_url, json=data)
+    return response.json()
 
 #send recieved_data to main_service
 

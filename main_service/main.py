@@ -143,20 +143,21 @@ visa_target_url = "http://127.0.0.1:8000/receive"
 @app.post("/order",tags = ["order"])
 async def buy_car(customer_id : str, card_number : str, vehicle_id : str, amount : str):
     #selected_car = my_vehicles[vehicle_id]
-    data_to_send = { "data" :  {
+    data_to_send = { 
         "customer_id": customer_id,  
         "card_number" : card_number,
         "vehicle_id" : vehicle_id,
-        "amount" : amount   } } 
+        "amount" : amount   } 
 
     response = requests.post(url=visa_target_url,json=data_to_send)
 
+ready_order_data = []
 
 @app.post("/ready-order",tags = ["order"])
 async def receive_order_transaction(data:dict):
-        received_data = data
-        print("Received data:", received_data)
-        return received_data
+        ready_order_data.append(data)
+        return ready_order_data
+       
         
 
 

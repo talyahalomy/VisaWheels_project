@@ -6,25 +6,26 @@ metadata:
   labels:
     app: visawheels
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: visawheels
-      service: main-service
   template:
     metadata:
       labels:
         app: visawheels
     spec:
       containers:
-       - name: main-service
-         image: talyahalomy/main-service:latest
-         env:
-           - name: TARGET_URL
-             valueFrom:
-                configMapKeyRef:
-                name: main-config-map
-                key: TARGET_URL
-    ports:
-    - containerPort: 9001
+       - name: visa-service
+         image: talyahalomy/visa-service:latest
+         ports:
+         - containerPort: 9010    
+       -  name: main-service
+          image: talyahalomy/main-config-map:latest
+          ports:
+          - containerPort: 9011
+          envFrom:
+          - configMapRef:
+              name: main-config-map
+      
 

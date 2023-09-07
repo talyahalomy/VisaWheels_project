@@ -7,11 +7,10 @@ metadata:
 spec:
     selector:
         app: visawheels
-        service: main-service
     ports:
       - protocol: TCP
-        port: 9001
-        targetPort: 9001
+        port: 9000
+        targetPort: 9000
     type: LoadBalancer
 
 
