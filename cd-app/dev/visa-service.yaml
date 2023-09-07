@@ -8,4 +8,4 @@ spec:
     app: visawheels
   ports:
   - port: 9010
-    targetPort: 9010
+    targetPort: http
