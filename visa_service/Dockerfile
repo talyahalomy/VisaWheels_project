@@ -4,11 +4,11 @@ FROM python:3.10-alpine
 
 WORKDIR /app
 
-RUN pip install fastapi uvicorn
+RUN pip install fastapi uvicorn pymongo
 
 COPY visa.py /app
 
-EXPOSE 8000
+EXPOSE 9010
 
 CMD ["python", "visa.py"]
 

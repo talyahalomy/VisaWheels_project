@@ -3,7 +3,6 @@
         push:
           branches:
             - main
-      
       name: Build and push docker images
       
       jobs:
