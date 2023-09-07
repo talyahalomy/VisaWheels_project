@@ -8,7 +8,7 @@ RUN pip install fastapi uvicorn requests pymongo
 
 COPY main.py /app
 
-EXPOSE 9001
+EXPOSE 9000
 
 CMD ["python", "main.py"]
 
