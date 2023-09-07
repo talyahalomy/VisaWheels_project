@@ -11,7 +11,7 @@ collection = db_vehicles["vehiecls"]
 
 app = FastAPI()
 
-@app.get("/")
+@app.get("/cars")
 async def home():
     return "Hello, this is the Vehicle Management API!"
 
