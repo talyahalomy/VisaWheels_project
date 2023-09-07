@@ -1,168 +1,120 @@
-from fastapi import FastAPI, Response
-import json
-import requests 
-import uvicorn
-import os
+from fastapi import FastAPI
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+import requests
 
 
-# with open("vehicles.json", "r") as f:
-#          my_vehicles = json.load(f)
-
-my_vehicles = {
-    "829102":{ "manufactor": "Mitsubishi"
-    ,"model": "Lancer Evolution"
-    ,"year": 2008
-    ,"color": "Red",
-    "vehicle_id": 829102,
-    "price": 170000
-    },"778214":{ "manufactor": "Peugeot"
-    ,"model": "106"
-    ,"year": 1999
-    ,"color": "White",
-    "vehicle_id": 778214,
-    "price": 45000
-    }}
-
-customers = {
-       
-    "82719239": { 
-
-    "customer_id": 82719239,
-    "name": "Steve Jobs",
-    "address": "Colorado, South Park",
-    "phone": "8102310777"
-
-},
-
-"78812932":{
-
-        "customer_id": 78812932,
-        "name": "Steve Jobs",
-        "address": "Colorado, South Park",
-        "phone": "8102310223" },   
-"80942932":{
-
-        "customer_id": 80942932,
-        "name": "Steve Jobs",
-        "address": "Colorado, South Park",
-        "phone": "9528101231"  }
-    
-}
-
+# client = MongoClient("mongodb://localhost:27017")
+client = MongoClient("mongodb://localhost:27017")
+db_vehicles = client["vehiecls"]
+collection = db_vehicles["vehiecls"]
 
 app = FastAPI()
 
-@app.get("/", tags=["Homepage"])
-async def homepage():
-        return Response(content= "Hello and welcome to our vehicle website! \nGo to /docs to see all our functions.", media_type="text/plain")
+@app.get("/")
+async def home():
+    return "Hello, this is the Vehicle Management API!"
 
-#GET used for viewwing specific vehicle:
-@app.get("/get-vehicle", tags=["Vehicle"])
-async def vehicle(vehicle_id: str ):
-        if vehicle_id not in my_vehicles:
-                return {"Error": "Vehicle ID not found"}
-        return my_vehicles[vehicle_id]
+@app.get("/vehicles", tags=["vehicles"])
+async def get_all_vehicles():
+    vehicle_data = []
+    for doc in collection.find():
+        vehicles = doc.get("vehicles", [])
+        for vehicle in vehicles:
+            vehicle_data.append(vehicle)
+    return {"data": vehicle_data}
 
-#GET used for viewing all vehicles:
-@app.get("/get-all-vehicles", tags=["Vehicle"])
-async def vehicle():
-        return my_vehicles
-
-
-@app.put("/update-vehicle", tags=["Vehicle"])
-#PUT used for updating existing vehicle details:
-async def update_vehicle(vehicle_id: str, manufactor: str, model: str, year: int, color: str):
-        if vehicle_id not in my_vehicles:
-                return {"Error": "Vehicle ID not found"}      
-        my_vehicles[vehicle_id]["manufactor"] = manufactor
-        my_vehicles[vehicle_id]["model"] = model
-        my_vehicles[vehicle_id]["year"] = year
-        my_vehicles[vehicle_id]["color"] = color
-        return my_vehicles[vehicle_id]
-
-#POST used for creating new vehicle:
-@app.post("/create-vehicle", tags=["Vehicle"])
-async def create_vehicle(vehicle_id: str, manufactor: str, model: str, year: int, color: str):
-        if vehicle_id in my_vehicles:
-                return {"Error": "Vehicle ID already exists"}
-        my_vehicles[vehicle_id] = {"manufactor": manufactor, "model": model, "year": year, "color": color, "vehicle_id": vehicle_id}
-        return my_vehicles[vehicle_id]
-
-@app.get("/vehicles")
-async def get_vehicles():
-    vehicles = []
-    for vehicle in my_vehicles.values():
-        vehicles.append(vehicle)
-    return {"vehicles": vehicles}
-
-#DELETE used for deleting vehicle:
-@app.delete("/delete-vehicle", tags=["Vehicle"])
-async def delete_vehicle(vehicle_id: str):
-        if vehicle_id not in my_vehicles:
-                return {"Error": "Vehicle ID not found"}
-        del my_vehicles[vehicle_id]
-        return {"Vechicle has been deleted"}
-        
-#use my customers json file to load customers
-#with open("customers.json", "r") as f:
-        #customers = json.load(f)
+@app.get("/vehicles/{vehicle_id}", tags=["vehicles"])
+async def get_vehicle_by_id(vehicle_id: int):
+    vehicle = collection.find_one({"vehicles.vehicle_id": vehicle_id})
+    if vehicle is None:
+        return {"message": "Vehicle not found"}
+    
+    for veh in vehicle["vehicles"]:
+        if veh["vehicle_id"] == vehicle_id:
+            return veh
+    
+    return {"message": "Vehicle not found"}
 
 
-@app.get("/get-customer", tags=["Customers"])
-async def customer(customer_id: str):
-        if customer_id not in customers:
-                return {"Error": "Customer ID not found"}
-        return customers[customer_id]
+# "vehicle_id": collection.count_documents({}) + 1,  # Assign a new vehicle_id
 
-@app.get("/get-all-customers", tags=["Customers"])
-async def customer():
-        return customers
+@app.post("/vehicles", tags=["vehicles"])
+async def create_vehicle(vehicle_id :int ,manufacturer: str, model: str, year: int, color: str, vehicle_price: float):
+    new_vehicle = {
+        "vehicle_id": vehicle_id,
+        "manufacturer": manufacturer,
+        "model": model,
+        "year": year,
+        "color": color,
+        "vehicle_price": vehicle_price
+    }
+    result = collection.insert_one({"vehicles": [new_vehicle]})
+    return {"message": "Vehicle created successfully", "vehicle_id": str(result.inserted_id)}
 
-@app.put("/update-customer", tags=["Customers"])
-async def update_customer(customer_id: str, name: str, address: str, phone: str):
-        if customer_id not in customers:
-                return {"Error": "Customer ID not found"}
-        customers[customer_id]["name"] = name
-        customers[customer_id]["address"] = address
-        customers[customer_id]["phone"] = phone
-        return customers[customer_id]
+@app.put("/vehicles/{vehicle_id}", tags=["vehicles"])
+async def update_vehicle(vehicle_id: int, manufacturer: str, model: str, year: int, color: str, vehicle_price: float):
+    updated_vehicle = {
+        "vehicle_id": vehicle_id,
+        "manufacturer": manufacturer,
+        "model": model,
+        "year": year,
+        "color": color,
+        "vehicle_price": vehicle_price
+    }
+    result = collection.update_one(
+        {"vehicles.vehicle_id": vehicle_id},
+        {"$set": {"vehicles.$": updated_vehicle}}
+    )
+    if result.modified_count > 0:
+        return {"message": "Vehicle updated successfully"}
+    else:
+        return {"message": "Vehicle not found"}
 
-@app.post("/create-customer", tags=["Customers"])
-async def create_customer(customer_id: str, name: str, address: str, phone: str):
-        if customer_id in customers:
-           return {"Error": "Customer ID already exists"}
-        customers[customer_id] = {"name": name, "address": address, "phone": phone, "customer_id": customer_id}
-        return customers[customer_id]
+@app.delete("/vehicles/{vehicle_id}", tags=["vehicles"])
+async def delete_vehicle(vehicle_id: int):
+    result = collection.update_one(
+        {"vehicles.vehicle_id": vehicle_id},
+        {"$pull": {"vehicles": {"vehicle_id": vehicle_id}}}
+    )
+    if result.modified_count > 0:
+        return {"message": "Vehicle deleted successfully"}
+    else:
+        return {"message": "Vehicle not found"}
 
 
-#Get visa URL from environment variables (ConfigMap in Kubernetes), else use default values
+url_visa = "http://localhost:9010/receive"  
 
-visa_target_url = "http://127.0.0.1:8000/receive"
+@app.post("/order", tags=["order"])
+async def buy_car(customer: str, card_number: str, vehicle_id: int):
 
+    vehicle_data = collection.find_one({"vehicles.vehicle_id": vehicle_id})
+    if vehicle_data is None:
+        return {"message": "Vehicle not found"}
 
-@app.post("/order",tags = ["order"])
-async def buy_car(customer_id : str, card_number : str, vehicle_id : str, amount : str):
-    #selected_car = my_vehicles[vehicle_id]
-    data_to_send = { 
-        "customer_id": customer_id,  
-        "card_number" : card_number,
-        "vehicle_id" : vehicle_id,
-        "amount" : amount   } 
+    selected_vehicle = None
+    for vehicle in vehicle_data["vehicles"]:
+        if vehicle["vehicle_id"] == vehicle_id:
+            selected_vehicle = vehicle
+            break
 
-    response = requests.post(url=visa_target_url,json=data_to_send)
+    if selected_vehicle is None:
+        return {"message": "Vehicle not found"}
 
-ready_order_data = []
+    data_to_send = {
+        "customer": customer,
+        "card_number": card_number,
+        "amount": selected_vehicle["vehicle_price"],
+        "vehicle_id": vehicle_id
+    }
 
-@app.post("/ready-order",tags = ["order"])
-async def receive_order_transaction(data:dict):
-        ready_order_data.append(data)
-        return ready_order_data
-       
-        
+    print("Sending data:", data_to_send)
 
+    res = requests.post(url=url_visa, json=data_to_send)  # Sending to visa service
+    print("Response:", res.text)
+
+    return res.json()
 
 if __name__ == "__main__":
-   uvicorn.run(app, host="0.0.0.0", port=9001)
-
- 
-
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=9000)

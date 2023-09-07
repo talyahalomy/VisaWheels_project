@@ -1,96 +1,167 @@
-from fastapi import FastAPI, Response
-import requests
-import random
-import json
+from fastapi import FastAPI
+from pymongo import MongoClient
+from bson.objectid import ObjectId
 import uvicorn
-import os
+# import json
+import random
+# from pydantic import BaseModel
+# import string
+
+# class Visa(BaseModel):
+#     customer : str
+#     card_number : str
+#     amount : str
 
 app = FastAPI()
 
+# def generate_transaction_id():
+#     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
-Transaction_id = random.randint(100000, 999999)
-
-
-@app.get("/")
-async def homepage():
-    return Response(content= "Welcome to VISA website! \nGo to /docs to make a transaction.", media_type="text/plain")
-
-
-approved_visa = {}
-rejected_visa = {}
-all_transactions = approved_visa, rejected_visa
+# MongoDB setup
+# client = MongoClient("mongodb://localhost:27017")
+client = MongoClient("mongodb://localhost:27017")
+db = client["visa"]
+received_data_collection = db["visa"]  # Use the existing "visa" collection
+success_visa_collection = db["success"]
+rejected_visa_collection = db["rejected"]
 
 
-""" @app.post("/transaction")
-async def Transaction ():
-      with open("data_to_send.json", "r") as f:
-                data_to_send = json.load(f)
-        if final_status == "approve":
-            data_to_insert = {"customer_id":data_to_send["data"]["customer_id"],
-            "visa_number": data_to_send["data"]["card_number"],
-            "amount": data_to_send["data"]["amount"], 
-            "status": final_status,
-            "Transaction_id": Transaction_id}
-
-            with open("approved_visa.json", "w+") as f:
-               json.dump(data_to_insert, f, default=str, indent=4)
-
-        else: 
-            data_to_insert = {"customer_id":data_to_send["data"]["customer_id"],
-            "visa_number": data_to_send["data"]["card_number"],
-            "amount": data_to_send["data"]["amount"], 
-            "status": final_status}
-
-            with open("rejected_visa.json", "w+") as f:
-               json.dump(data_to_insert, f, default=str, indent=4)           
-
- """
-
-
-status = ["approve"] * 8 + ["reject"] * 2
-
-def decide_reuqest(status):
-    return random.choice(status)
-
-
-main_target_url = "http://127.0.0.1:9001/ready-order"
 
 @app.post("/receive", tags=["receive"])
 async def receive_post_request(data: dict):
-    print("Received data:", data)  
-    final_status = decide_reuqest(status)
-    Transaction_id = random.randint(100000, 999999)
-    received_data = data 
-    received_data["status"] = final_status
-    if final_status == "approve":
-        approved_visa[Transaction_id] = received_data
-    else:
-        rejected_visa[Transaction_id] = received_data
-    return received_data
+    # Process the received data
+    print(data)
+
+    transection_id = random.randint(10000, 99999)
+    statuses = ["success"] * 8 + ["failure"] * 2
+    random_status = random.choice(statuses)
+
+    if random_status == "success":
+        transaction_data_good = {
+            "customer_id": data["customer"],
+            "card_number": data["card_number"],
+            "amount": data["amount"],
+            "transaction_id": transection_id,
+            "status": random_status
+        }
+        success_visa_collection.insert_one(transaction_data_good)
+        
+
+        return {
+            "message": "Transaction successful",
+            "customer_id": data["customer"],
+            "transaction_id": transection_id,
+            "status": random_status
+        }
+    
+    elif random_status == "failure":
+        transaction_data_bad = {
+            "customer_id": data["customer"],
+            "card_number": data["card_number"],
+            "amount": data["amount"],
+            "transaction_id": transection_id,
+            "status": random_status
+        }
+        rejected_visa_collection.insert_one(transaction_data_bad)
+    
+        
+
+        return {
+            "message": "Transaction failed",
+            "customer_id": data["customer"],
+            "transaction_id": transection_id,
+            "status": random_status
+        }
+    
+    # received_data_collection.insert_one({"data": data})
+
+    return {"message": "Data received successfully"}
+
+# @app.post("/Transection", tags=["Transection"])
+# async def Transection():
+#     received_data = received_data_collection.find_one({})["data"]
+#     # received_data = received_data_collection.find_one({})
+
+#     vehicle_id = received_data["vehicle_id"]
+
+#     db_vehicles_client = MongoClient("mongodb://172.17.0.1:27017")
+#     db_vehicles = db_vehicles_client["vehiecls"]
+#     vehicle_data = db_vehicles["vehicels"].find_one({"vehicles.vehicle_id": vehicle_id})
 
 
-@app.post("/send_approved_visa", tags=["send_response"])
-async def send_approved_visa():
-    data = approved_visa
-    response = requests.post(url=main_target_url, json=data)
-    return response.json()
 
-#send recieved_data to main_service
+#     vehicle_data = db_vehicles["vehicels"].find_one({"vehicles.vehicle_id": vehicle_id})
+#     if vehicle_data is None:
+#         return {"message": "Vehicle not found"}
 
-@app.get("/get-all-transactions")
-async def get_all_transactions():
-    return all_transactions
-         
+#     selected_vehicle = None
+#     for vehicle in vehicle_data["vehicles"]:
+#         if vehicle["vehicle_id"] == vehicle_id:
+#             selected_vehicle = vehicle
+#             break
 
-@app.get("/get-all-rejected-transactions")
-async def get_all_rejected_transactions():
-    return rejected_visa
+#     if selected_vehicle is None:
+#         return {"message": "Vehicle not found"}
 
-@app.get("/get-all-approved-transactions")
-async def get_all_approved_transactions():
-    return approved_visa
+#     transection_id = random.randint(10000, 99999)
 
+#     if random_status == "success":
+#         transaction_data_good = {
+#             "customer_id": received_data["customer"],
+#             "card_number": received_data["card_number"],
+#             "amount": selected_vehicle["vehicle_price"],
+#             "transaction_id": transection_id,
+#             "status": random_status
+#         }
+#         success_visa_collection.insert_one(transaction_data_good)
+        
+        
+
+
+#         return {
+#             "message": "Transaction successful",
+#             "customer_id": received_data["customer"],
+#             "transaction_id": transection_id,
+#             "status": random_status
+#         }
+#     elif random_status == "failure":
+#         transaction_data_bad = {
+#             "customer_id": received_data["customer"],
+#             "card_number": received_data["card_number"],
+#             "amount": selected_vehicle["vehicle_price"],
+#             "transaction_id": transection_id,
+#             "status": random_status
+#         }
+#         rejected_visa_collection.insert_one(transaction_data_bad)
+    
+        
+
+#         return {
+#             "message": "Transaction failed",
+#             "customer_id": received_data["customer"],
+#             "transaction_id": transection_id,
+#             "status": random_status
+#         }
+
+
+@app.get("/")
+async def home():    
+    return "hello" 
+
+
+@app.get("/Good",tags = ["Good"])
+async def get_all_good():
+    my_good_json = list(success_visa_collection.find({}))
+    for data in my_good_json:
+        data["_id"] = str(data["_id"])
+    return my_good_json
+
+@app.get("/Bad",tags = ["Bad"])
+async def get_all_bad():
+    my_bad_json = list(rejected_visa_collection.find({}))
+    for data in my_bad_json:
+        data["_id"] = str(data["_id"])
+    return my_bad_json
 
 if __name__ == "__main__":
- uvicorn.run(app, host="0.0.0.0", port=8000)
-
+    uvicorn.run(app, host="0.0.0.0", port=9010)

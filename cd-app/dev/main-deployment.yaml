@@ -19,11 +19,11 @@ spec:
        - name: visa-service
          image: talyahalomy/visa-service:latest
          ports:
-         - containerPort: 9010    
+         - containerPort: 9000 
        -  name: main-service
           image: talyahalomy/main-service:latest
           ports:
-          - containerPort: 9011
+          - containerPort: 9010
           envFrom:
           - configMapRef:
               name: main-config-map
