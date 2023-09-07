@@ -21,7 +21,7 @@ spec:
          ports:
          - containerPort: 9010    
        -  name: main-service
-          image: talyahalomy/main-config-map:latest
+          image: talyahalomy/main:latest
           ports:
           - containerPort: 9011
           envFrom:
