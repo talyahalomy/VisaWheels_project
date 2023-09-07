@@ -3,15 +3,16 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import requests
 
+#make docs_url to be default when you run the app on the browser in ingress
+app = FastAPI(docs_url="/")
 
 # client = MongoClient("mongodb://localhost:27017")
 client = MongoClient("mongodb://localhost:27017")
 db_vehicles = client["vehiecls"]
 collection = db_vehicles["vehiecls"]
 
-app = FastAPI()
 
-@app.get("/cars")
+@app.get("/")
 async def home():
     return "Hello, this is the Vehicle Management API!"
 

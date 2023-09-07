@@ -144,7 +144,7 @@ async def receive_post_request(data: dict):
 #         }
 
 
-@app.get("/")
+app = FastAPI(docs_url="/")
 async def home():    
     return "hello" 
 
