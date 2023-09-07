@@ -6,7 +6,6 @@ metadata:
 spec:
   selector:
     app: visawheels
-    container: visa-service
   ports:
   - port: 9010
     targetPort: 9010
