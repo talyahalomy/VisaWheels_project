@@ -7,3 +7,4 @@ subsets:
       - ip: 10.64.3.36
     ports:
       - port: 27017
+      
