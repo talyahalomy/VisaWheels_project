@@ -4,7 +4,7 @@ metadata:
   name: service-1
 spec:
   selector:
-    app: Visawheels
+    app: visawheels
     container: main-service
   ports:
   - port: 9000
