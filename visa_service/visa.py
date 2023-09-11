@@ -1,3 +1,7 @@
+# This Python for the visa service, which will be responsible for the following:
+# Receiving transaction request from the main service -
+# - and sending back the transaction status (success/failure)
+
 from fastapi import FastAPI
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -17,10 +21,9 @@ success_visa_collection = db["success"]
 rejected_visa_collection = db["rejected"]
 
 
-
+# Receive data from the main service, and send back the transaction status
 @app.post("/receive", tags=["receive"])
 async def receive_post_request(data: dict):
-    # Process the received data
     print(data)
 
     transection_id = random.randint(10000, 99999)
@@ -70,9 +73,12 @@ async def receive_post_request(data: dict):
 
 app = FastAPI(docs_url="/")
 
+#homepage
 async def home():    
-    return "hello" 
+    return "Hello and welcome to the visa service!" 
 
+
+# Get all approved transactions
 @app.get("/Good",tags = ["Good"])
 async def get_all_good():
     my_good_json = list(success_visa_collection.find({}))
@@ -80,12 +86,14 @@ async def get_all_good():
         data["_id"] = str(data["_id"])
     return my_good_json
 
+# Get all rejected transactions
 @app.get("/Bad",tags = ["Bad"])
 async def get_all_bad():
     my_bad_json = list(rejected_visa_collection.find({}))
     for data in my_bad_json:
         data["_id"] = str(data["_id"])
     return my_bad_json
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=9010)

@@ -1,3 +1,7 @@
+#Python code for the main service, which will be responsible for the following:
+#Handeling vehicles data, and sending it to the visa service to ask for transaction
+
+
 from fastapi import FastAPI
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -11,11 +15,12 @@ client = MongoClient("mongodb://localhost:27017")
 db_vehicles = client["vehiecls"]
 collection = db_vehicles["vehiecls"]
 
-
+#homepage
 @app.get("/")
 async def home():
     return "Hello, this is the Vehicle Management API!"
 
+#Get all vehicles
 @app.get("/vehicles", tags=["vehicles"])
 async def get_all_vehicles():
     vehicle_data = []
@@ -25,6 +30,7 @@ async def get_all_vehicles():
             vehicle_data.append(vehicle)
     return {"data": vehicle_data}
 
+#Get a specific vehicle by id
 @app.get("/vehicles/{vehicle_id}", tags=["vehicles"])
 async def get_vehicle_by_id(vehicle_id: int):
     vehicle = collection.find_one({"vehicles.vehicle_id": vehicle_id})
@@ -38,7 +44,7 @@ async def get_vehicle_by_id(vehicle_id: int):
     return {"message": "Vehicle not found"}
 
 
-
+#Create a new vehicles
 @app.post("/vehicles", tags=["vehicles"])
 async def create_vehicle(vehicle_id :int ,manufacturer: str, model: str, year: int, color: str, vehicle_price: float):
     new_vehicle = {
@@ -52,6 +58,8 @@ async def create_vehicle(vehicle_id :int ,manufacturer: str, model: str, year: i
     result = collection.insert_one({"vehicles": [new_vehicle]})
     return {"message": "Vehicle created successfully", "vehicle_id": str(result.inserted_id)}
 
+
+#Update a vehicle
 @app.put("/vehicles/{vehicle_id}", tags=["vehicles"])
 async def update_vehicle(vehicle_id: int, manufacturer: str, model: str, year: int, color: str, vehicle_price: float):
     updated_vehicle = {
@@ -71,6 +79,7 @@ async def update_vehicle(vehicle_id: int, manufacturer: str, model: str, year: i
     else:
         return {"message": "Vehicle not found"}
 
+#Delete a vehicle
 @app.delete("/vehicles/{vehicle_id}", tags=["vehicles"])
 async def delete_vehicle(vehicle_id: int):
     result = collection.update_one(
@@ -85,6 +94,7 @@ async def delete_vehicle(vehicle_id: int):
 
 url_visa = "http://localhost:9010/receive"  
 
+#Buy a vehicle
 @app.post("/order", tags=["order"])
 async def buy_car(customer: str, card_number: str, vehicle_id: int):
 
