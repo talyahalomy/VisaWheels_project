@@ -1,4 +1,5 @@
-# using .tfvars file, for sensitive data
+# variables for main file
+# using .tfvars file, for sensitive data (where default value not exists)
 
 variable "project-id" {
     description = "The project ID in gcp"

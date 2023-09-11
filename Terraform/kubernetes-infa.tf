@@ -1,3 +1,5 @@
+# this file is used to create GKE cluster, that will run our application
+
 data "google_client_config" "default" {}
 
 provider "kubernetes" {
@@ -5,8 +7,6 @@ provider "kubernetes" {
   token                  = var.gcp-service-account
   cluster_ca_certificate = base64decode(module.gke.ca_certificate)
 }
-
-# GKE Cluster creation
 
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
