@@ -5,4 +5,6 @@ idea, from python code all the way for running and ready application in kubernet
 
 ### Architecture Diagram
 ![Diagram:](https://github.com/talyahalomy/VisaWheels_project/raw/206d93dfe207cbead9de329511146cbb32b92d9a/visa-wheels-diagram.png)
+
+### Tools Used
 ![tools](https://i.ibb.co/zhfvqgS/tools.png)
