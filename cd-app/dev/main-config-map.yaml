@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: main-config-map
-  namespace: visawheels
-data:
-    TARGET_URL: "http://main-service:8000/receive"
-  

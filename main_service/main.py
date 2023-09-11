@@ -3,10 +3,10 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import requests
 
-#make docs_url to be default when you run the app on the browser in ingress
+#docs_url to be default when you run the app on the browser in ingress
 app = FastAPI(docs_url="/")
 
-# client = MongoClient("mongodb://localhost:27017")
+
 client = MongoClient("mongodb://localhost:27017")
 db_vehicles = client["vehiecls"]
 collection = db_vehicles["vehiecls"]
@@ -38,7 +38,6 @@ async def get_vehicle_by_id(vehicle_id: int):
     return {"message": "Vehicle not found"}
 
 
-# "vehicle_id": collection.count_documents({}) + 1,  # Assign a new vehicle_id
 
 @app.post("/vehicles", tags=["vehicles"])
 async def create_vehicle(vehicle_id :int ,manufacturer: str, model: str, year: int, color: str, vehicle_price: float):
