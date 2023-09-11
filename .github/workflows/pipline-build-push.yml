@@ -3,6 +3,10 @@
         push:
           branches:
             - main
+          paths:
+           - 'main_service/**'
+           - 'visa_service/**'
+           
       name: Build and push docker images
       
       jobs:
