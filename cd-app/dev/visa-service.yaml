@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: service-2
-  namespace: visawheels
+  name: visa
 spec:
   selector:
-    app: visawheels
+    app: visa
   ports:
-  - port: 9010
-    targetPort: http
+  - name: visa-port
+    port: 9010
+    targetPort: 9010

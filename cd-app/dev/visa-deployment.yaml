@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: main
+  name: visa
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: main
+      app: visa
   template:
     metadata:
       labels:
-        app: main
+        app: visa
     spec:
       containers:
-      - name: main-app
-        image: talyahalomy/main-service:latest
+      - name: visa-app
+        image: talyahalomy/visa-service:latest
         ports:
-        - containerPort: 9000
-      
+        - containerPort: 9010
 
+ 

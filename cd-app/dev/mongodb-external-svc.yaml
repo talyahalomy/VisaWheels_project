@@ -1,5 +1,5 @@
-kind: Endpoints
 apiVersion: v1
+kind: Endpoints
 metadata:
   name: mongodb
 subsets:
@@ -7,4 +7,5 @@ subsets:
       - ip: 10.64.3.36
     ports:
       - port: 27017
-      
+    selector:
+      app: mongodb

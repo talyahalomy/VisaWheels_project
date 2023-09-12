@@ -1,23 +1,24 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-   name: ingress-service
-   namespace: visawheels
+  name: my-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
   - http:
       paths:
+      - path: /cars
+        pathType: Prefix
+        backend:
+          service:
+            name: main
+            port:
+              number: 9000
       - path: /visa
         pathType: Prefix
         backend:
           service:
-            name: service-2
+            name: visa
             port:
               number: 9010
-      - path: /main
-        pathType: Prefix
-        backend:
-          service:
-            name: service-1
-            port:
-              number: 9000
