@@ -17,10 +17,7 @@ spec:
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: visawheels
-  
-  syncOptions:
-    - CreateNamespace = true
-       
+
   syncPolicy:
     automated:
       selfHeal: true
