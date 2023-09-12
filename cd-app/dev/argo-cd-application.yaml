@@ -5,6 +5,7 @@ metadata:
   name: visawheels
   namespace: argocd
 
+
 spec:
   project: default
 
@@ -16,7 +17,9 @@ spec:
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: visawheels
-    createNamespace: true
+  
+  syncOptions:
+    - CreateNamespace = true
        
   syncPolicy:
     automated:
