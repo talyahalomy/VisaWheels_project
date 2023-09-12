@@ -17,5 +17,3 @@ Both vehicles and transactions are stored in Mongo databases, which we can use t
 
 ![tools](https://i.ibb.co/zhfvqgS/tools.png)
 
-![tools](https://i.ibb.co/sbgspVg/tools-veed-remove-background.png)
-
