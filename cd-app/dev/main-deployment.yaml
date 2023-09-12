@@ -24,8 +24,6 @@ spec:
           image: talyahalomy/main-service:latest
           ports:
           - containerPort: 9010
-          envFrom:
-          - configMapRef:
-              name: main-config-map
+
       
 
