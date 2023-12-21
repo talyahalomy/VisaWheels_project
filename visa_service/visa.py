@@ -12,6 +12,7 @@ import random
 app = FastAPI()
 
 
+
 # MongoDB setup
 
 client = MongoClient("mongodb://localhost:27017")
@@ -97,3 +98,8 @@ async def get_all_bad():
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=9010)
+
+
+
+
+# pipline test
