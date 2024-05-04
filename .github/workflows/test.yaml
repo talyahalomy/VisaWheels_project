@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: test
-      - run: |
+        run: |
          if [ '${{ inputs.test_input }}' = "true" ]; then
          echo "true"
          fi
