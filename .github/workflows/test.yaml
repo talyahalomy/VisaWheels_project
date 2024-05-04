@@ -1,11 +1,11 @@
 name: Test single qutoes vs double quotes
 on:
- workflow_dispatch:
-  inputs:
-   test_input:
-   required: true
-   type: boolean
-   default: false
+  workflow_dispatch:
+    inputs:
+      test_input:
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   test:
