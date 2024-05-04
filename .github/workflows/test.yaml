@@ -1,0 +1,21 @@
+name: Test single qutoes vs double quotes
+on:
+ workflow_dispatch:
+  inputs:
+   test_input:
+   required: true
+   type: boolean
+   default: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test
+      - run: |
+         if [ '${{ inputs.test_input }}' = "true" ]; then
+         echo "true"
+         fi
+   
+
+
