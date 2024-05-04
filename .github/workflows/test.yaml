@@ -13,8 +13,10 @@ jobs:
     steps:
       - name: test
         run: |
-         if [ '${{ inputs.test_input }}' = "true" ]; then
+         if [ "${{ inputs.test_input }}" = "true" ]; then
          echo "true"
+         else
+          echo "false"
          fi
    
 
